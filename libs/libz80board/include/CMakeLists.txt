@@ -22,4 +22,11 @@
 # SOFTWARE.
 ###############################################################################
 
-add_subdirectory(libz80board)
+install(FILES 
+			libz80board.h
+		DESTINATION 
+			include)
+
+install(DIRECTORY 
+			libz80board
+		DESTINATION include)

@@ -1,5 +1,6 @@
-###############################################################################
-# z80-board-utilities CMake file
+#!/bin/bash
+
+# z80-board-utilities
 #
 # Copyright (c) 2018 Michael Cullen
 #
@@ -19,7 +20,10 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-###############################################################################
+# SOFTWARE
 
-add_subdirectory(libz80board)
+set +e
+
+
+# This has no actual use but shows how you would do it!
+# lupdate src ui -ts ts/z80-board-utils_en_us.ts
