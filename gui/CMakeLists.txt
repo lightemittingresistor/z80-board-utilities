@@ -29,21 +29,22 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
 
 set(Z80_BOARD_UTILS_UIS 
-	ui/connection.ui)
+	ui/boardChooser.ui
+	ui/mainwindow.ui)
 
 set(Z80_BOARD_UTILS_SOURCES
 	src/z80-board-utility.cpp
-	src/models/SerialPortModel.cpp src/models/SerialPortModel.h
-	src/widgets/Connection.cpp src/widgets/Connection.h)
+	src/widgets/BoardChooser.cpp src/widgets/BoardChooser.h
+	src/widgets/MainWindow.cpp src/widgets/MainWindow.h)
 
 set(Z80_BOARD_UTILS_TS_SOURCES )
 
 # make UIs
 qt5_wrap_ui(Z80_BOARD_UTILS_UI_SOURCES ${Z80_BOARD_UTILS_UIS})
-source_group("Header Files\\ui"${Z80_BOARD_UTILS_UI_SOURCES})
-source_group("UI Files" ${Z80_BOARD_UTILS_UIS})
+source_group("Header Files\\ui" FILES ${Z80_BOARD_UTILS_UI_SOURCES})
+source_group("UI Files" FILES ${Z80_BOARD_UTILS_UIS})
 
-add_executable(z80-board-utility WIN32 
+add_executable(z80-board-utility WIN32 MACOSX_BUNDLE
 				${Z80_BOARD_UTILS_SOURCES}
 				${Z80_BOARD_UTILS_UI_SOURCES}
 				)
@@ -64,5 +65,17 @@ find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
 add_custom_command(TARGET z80-board-utility
                    POST_BUILD
                    COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime --no-opengl-sw $<TARGET_FILE:z80-board-utility>
+				   )
+endif()
+if(APPLE AND UNIX)
+# see https://www.codeday.top/2017/10/11/47866.html for hints about this bit 
+
+get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
+
+add_custom_command(TARGET z80-board-utility
+                   POST_BUILD
+                   COMMAND ${MACDEPLOYQT_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/z80-board-utility.app
 				   )
 endif()

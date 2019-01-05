@@ -22,16 +22,46 @@
  * SOFTWARE.
  */
 
-#include <QtWidgets/QApplication>
+#include "widgets/BoardChooser.h"
+#include "widgets/MainWindow.h"
 
-#include "widgets/Connection.h"
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMessageBox>
+#include <QScopedPointer>
+
+#include <libz80board.h>
 
 int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
     
-    Connection c(nullptr);
-    c.show();
+    z80_board_list_t lst = z80_board_list();
+    size_t boardCount = z80_board_list_count(lst);
+    z80_board_destroy_list(lst);
+
+    if(boardCount == 0)
+    {
+        QMessageBox::critical(nullptr,
+            "Z80 Board Utility",
+            "No boards found!",
+            QMessageBox::Ok);
+        return 1;
+    }
+
+    QScopedPointer<BoardChooser> chooser;
+    QScopedPointer<MainWindow> mainw;
+
+    mainw.reset(new MainWindow(nullptr));
+
+    if(boardCount > 1)
+    {
+        chooser.reset(new BoardChooser(nullptr, boardCount));
+        chooser->show();
+    }
+    else
+    {
+        mainw->showMain(1);
+    }
 
     return app.exec();
 }

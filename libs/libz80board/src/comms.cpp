@@ -22,15 +22,33 @@
  * SOFTWARE.
  */
 
-#include <libz80board.h>
-#include "error_internal.h"
+#include "libusb-wrapper/libusbcontext.h"
+#include "libusb-wrapper/usbdevice.h"
 
-z80_board_t z80_board_open(const char* serialPort, z80_board_error_t* error_out)
+#include <libz80board.h>
+
+#include "error_internal.h"
+#include "comms_internal.h"
+
+namespace expected
+{
+static const uint16_t vendorID = 0x16c0;
+static const uint16_t productID = 0x05df;
+static const char* manufacturerName = "lightemittingresistor.com";
+static const char* productName = "z80 board";
+}
+
+void maybeError(z80_board_error_t* error_out, std::string text)
 {
     if(error_out)
     {
-        *error_out = z80board::createExternalError("Not Implemented");
+        *error_out = z80board::createExternalError(std::move(text));
     }
+}
+
+z80_board_t z80_board_open(z80_board_list_t list, int id, z80_board_error_t* error_out)
+{
+    maybeError(error_out, "Not Implemented");
 	return nullptr;
 }
 
@@ -39,3 +57,33 @@ void z80_board_close(z80_board_t board)
 
 }
 
+LIBZ80BOARD_EXPORT z80_board_list_t z80_board_list()
+{
+    z80board::LibUSBContext ctx;
+    auto ret = std::make_unique<z80board::BoardList>();
+    auto devices = ctx.getDevices();
+
+    for(auto it = devices.begin(); it != devices.end(); ++it)
+    {
+        if(it->vendorId == expected::vendorID && it->productId == expected::productID 
+            && it->manufacturer == expected::manufacturerName
+            && it->product == expected::productName)
+        {
+            ret->push_back(*it);
+        }
+    }
+
+    return ret.release();;
+}
+
+LIBZ80BOARD_EXPORT void z80_board_destroy_list(z80_board_list_t list)
+{
+    z80board::BoardList* real = static_cast<z80board::BoardList*>(list);
+    delete real;
+}
+
+size_t z80_board_list_count(z80_board_list_t list)
+{
+    z80board::BoardList* real = static_cast<z80board::BoardList*>(list);
+    return real->size();
+}

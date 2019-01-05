@@ -22,29 +22,41 @@
 # SOFTWARE.
 ###############################################################################
 
+if(NOT UNIX OR APPLE) 
+include(libusb.cmake)
+else()
+# TODO LINUX
+endif()
+
 set(Z80BOARD_SOURCES
     include/libz80board.h
     include/libz80board/base.h
     include/libz80board/comms.h
     include/libz80board/error.h
-	src/comms.cpp
+    src/comms.cpp
     src/error.cpp src/error_internal.h
+
+    src/libusb-wrapper/libusbcontext.cpp src/libusb-wrapper/libusbcontext.h
+    src/libusb-wrapper/usbdevice.cpp src/libusb-wrapper/usbdevice.h
     )
 
 set(Z80BOARD_LIBS )
 
 if(WIN32)
-	set(Z80BOARD_PLATFORM_SOURCES
-			src/win32/stringutils.cpp src/win32/stringutils.h)
-	list(APPEND Z80BOARD_LIBS Setupapi.lib)
+    set(Z80BOARD_PLATFORM_SOURCES
+            src/win32/stringutils.cpp src/win32/stringutils.h)
+    list(APPEND Z80BOARD_LIBS Setupapi.lib)
 endif()
 
 add_definitions(-DBUILD_LIB_Z80BOARD)
 
+
 add_library(z80board SHARED 
-				${Z80BOARD_SOURCES} ${Z80BOARD_PLATFORM_SOURCES})
-target_link_libraries(z80board ${Z80BOARD_LIBS})
+                ${Z80BOARD_SOURCES} ${Z80BOARD_PLATFORM_SOURCES})
+target_link_libraries(z80board ${Z80BOARD_LIBS} ${LibUSB_LIBRARIES})
 target_include_directories(z80board PUBLIC include)
+target_include_directories(z80board PRIVATE ${LibUSB_INCLUDE_DIRS})
+add_dependencies(z80board libusb)
 
 source_group("common" FILES ${Z80BOARD_SOURCES})
 source_group("platform" FILES ${Z80BOARD_PLATFORM_SOURCES})
