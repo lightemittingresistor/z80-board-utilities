@@ -23,7 +23,6 @@
  */
 
 #include <libz80board.h>
-#include "SerialPort.h"
 #include "error_internal.h"
 
 z80_board_t z80_board_open(const char* serialPort, z80_board_error_t* error_out)
@@ -40,34 +39,3 @@ void z80_board_close(z80_board_t board)
 
 }
 
-static inline std::vector<std::pair<std::string, std::string>>* getList(z80_board_serial_port_list_t lst)
-{
-    return reinterpret_cast<std::vector<std::pair<std::string, std::string>>*>(lst);
-}
-
-z80_board_serial_port_list_t z80_board_list_serial_ports()
-{
-    std::vector<std::pair<std::string, std::string>> lst = z80board::listSerialPorts();
-
-    return new std::vector<std::pair<std::string, std::string>>(std::move(lst));
-}
-
-void z80_board_destroy_port_list(z80_board_serial_port_list_t lst)
-{
-    delete getList(lst);
-}
-
-size_t z80_board_serial_port_list_count(z80_board_serial_port_list_t lst)
-{
-    return getList(lst)->size();
-}
-
-const char* z80_board_serial_port_list_get_path(z80_board_serial_port_list_t lst, int n)
-{
-    return getList(lst)->at(n).first.c_str();
-}
-
-const char* z80_board_serial_port_list_get_desc(z80_board_serial_port_list_t lst, int n)
-{
-    return getList(lst)->at(n).second.c_str();
-}

@@ -28,7 +28,6 @@ set(Z80BOARD_SOURCES
     include/libz80board/comms.h
     include/libz80board/error.h
 	src/comms.cpp
-	src/SerialPort.cpp src/SerialPort.h
     src/error.cpp src/error_internal.h
     )
 
@@ -36,7 +35,6 @@ set(Z80BOARD_LIBS )
 
 if(WIN32)
 	set(Z80BOARD_PLATFORM_SOURCES
-			src/win32/Win32SerialPort.cpp
 			src/win32/stringutils.cpp src/win32/stringutils.h)
 	list(APPEND Z80BOARD_LIBS Setupapi.lib)
 endif()
@@ -48,7 +46,7 @@ add_library(z80board SHARED
 target_link_libraries(z80board ${Z80BOARD_LIBS})
 target_include_directories(z80board PUBLIC include)
 
-source_group("common" ${Z80BOARD_SOURCES})
-source_group("platform" ${Z80BOARD_PLATFORM_SOURCES})
+source_group("common" FILES ${Z80BOARD_SOURCES})
+source_group("platform" FILES ${Z80BOARD_PLATFORM_SOURCES})
 
 add_subdirectory(include)

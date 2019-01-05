@@ -36,6 +36,8 @@ if(WIN32)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIGURATION>/bin)
 endif()
 
+set (CMAKE_CXX_STANDARD 14)
+
 add_subdirectory(libs)
 add_subdirectory(cmd)
-add_subdirectory(gui)
+#add_subdirectory(gui)
