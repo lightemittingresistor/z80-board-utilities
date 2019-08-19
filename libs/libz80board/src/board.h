@@ -22,55 +22,34 @@
  * SOFTWARE.
  */
 
-#ifndef Z80_BOARD_USBDEVICE_H
-#define Z80_BOARD_USBDEVICE_H
+#ifndef Z80_BOARD_BOARD_H
+#define Z80_BOARD_BOARD_H
 
-#include <libusb-1.0/libusb.h>
-
-#include <string>
-#include <memory>
+#include "libusb-wrapper/usbdevice.h"
+#include <libz80board/comms.h>
 
 namespace z80board
 {
 
-struct USBDevice
+class Board
 {
-    uint8_t busNumber;
-    uint8_t portNumber;
-    uint8_t deviceAddress;
+public:
+    Board(USBDevice dev);
+    ~Board();
 
-    uint16_t vendorId;
-    uint16_t productId;
+    void setAddress(uint16_t addr);
+    uint16_t getAddress();
+    void reset();
 
-    std::string manufacturer;
-    std::string product;
+    z80_board_status getStatus();
 
-    USBDevice(std::shared_ptr<libusb_context> ctx, libusb_device* dev);
+    void read(unsigned char* data, uint16_t length);
+    void write(unsigned char* data, uint16_t length);
 
-    USBDevice(const USBDevice& other);
-    USBDevice(USBDevice&& other);
-    USBDevice& operator=(const USBDevice& other);
-    USBDevice& operator=(USBDevice&& other);
-
-    void open();
-    void close();
-
-    void sendVendor(uint8_t request,
-                    uint16_t value,
-                    uint16_t index,
-                    unsigned char *data,
-                    uint16_t length);
-
-    void receiveVendor(uint8_t request,
-                    uint16_t value,
-                    uint16_t index,
-                    unsigned char *data,
-                    uint16_t length);
+    void setJtagMode(bool enabled);
 
 private:
-    std::shared_ptr<libusb_context> ctx;
-    std::unique_ptr<libusb_device, void(*)(libusb_device*)> dev;
-    std::unique_ptr<libusb_device_handle, void(*)(libusb_device_handle*)> hndl;
+    USBDevice dev;
 };
 
 }

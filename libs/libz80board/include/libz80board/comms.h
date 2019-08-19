@@ -29,6 +29,7 @@
 #include "error.h"
 
 #include <string.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,9 +45,26 @@ LIBZ80BOARD_EXPORT size_t z80_board_list_count(z80_board_list_t list);
 /* opaque handle to board object */
 typedef void* z80_board_t;
 
+typedef struct 
+{
+    uint8_t hwVersionMajor;
+    uint8_t hwVersionMinor;
+
+    uint8_t swVersionMajor;
+    uint8_t swVersionMinor;
+
+    bool isBusMaster;
+} z80_board_status;
+
 // Open a z80 board index, optionally returning errors via error_out
 LIBZ80BOARD_EXPORT z80_board_t z80_board_open(z80_board_list_t list, int id, z80_board_error_t* error_out);
 LIBZ80BOARD_EXPORT void z80_board_close(z80_board_t board);
+LIBZ80BOARD_EXPORT void z80_board_set_pointer(z80_board_t board, uint16_t pointer);
+LIBZ80BOARD_EXPORT z80_board_status z80_board_get_status(z80_board_t board);
+LIBZ80BOARD_EXPORT void z80_board_reset(z80_board_t board);
+
+LIBZ80BOARD_EXPORT void z80_board_read(z80_board_t board, unsigned char* data, uint16_t length);
+LIBZ80BOARD_EXPORT void z80_board_write(z80_board_t board, unsigned char* data, uint16_t length);
 
 #ifdef __cplusplus
 }

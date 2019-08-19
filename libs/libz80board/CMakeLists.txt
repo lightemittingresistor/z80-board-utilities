@@ -28,6 +28,21 @@ else()
 # TODO LINUX
 endif()
 
+set(JAM_PLAYER_SOURCES
+    src/jam_player/jamarray.c
+    src/jam_player/jamcomp.c
+    src/jam_player/jamcrc.c
+    src/jam_player/jamexec.c
+    src/jam_player/jamexp.c
+    src/jam_player/jamheap.c
+    src/jam_player/jamjtag.c
+    src/jam_player/jamnote.c
+    src/jam_player/jamstack.c
+    src/jam_player/jamsym.c
+    src/jam_player/jamutil.c
+    src/jam_player/jamstub_z80board.cpp
+    )
+
 set(Z80BOARD_SOURCES
     include/libz80board.h
     include/libz80board/base.h
@@ -35,6 +50,7 @@ set(Z80BOARD_SOURCES
     include/libz80board/error.h
     src/comms.cpp
     src/error.cpp src/error_internal.h
+    src/board.cpp src/board.h
 
     src/libusb-wrapper/libusbcontext.cpp src/libusb-wrapper/libusbcontext.h
     src/libusb-wrapper/usbdevice.cpp src/libusb-wrapper/usbdevice.h
@@ -51,7 +67,7 @@ endif()
 add_definitions(-DBUILD_LIB_Z80BOARD)
 
 
-add_library(z80board SHARED 
+add_library(z80board SHARED ${JAM_PLAYER_SOURCES}
                 ${Z80BOARD_SOURCES} ${Z80BOARD_PLATFORM_SOURCES})
 target_link_libraries(z80board ${Z80BOARD_LIBS} ${LibUSB_LIBRARIES})
 target_include_directories(z80board PUBLIC include)
@@ -60,5 +76,6 @@ add_dependencies(z80board libusb)
 
 source_group("common" FILES ${Z80BOARD_SOURCES})
 source_group("platform" FILES ${Z80BOARD_PLATFORM_SOURCES})
+source_group("jam_player" FILES ${JAM_PLAYER_SOURCES})
 
 add_subdirectory(include)

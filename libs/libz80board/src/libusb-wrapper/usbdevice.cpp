@@ -1,6 +1,8 @@
 
 #include "usbdevice.h"
 
+#include <iostream>
+
 namespace z80board
 {
 
@@ -119,6 +121,56 @@ void USBDevice::open()
 void USBDevice::close()
 {
     hndl.reset();
+}
+
+void USBDevice::sendVendor(uint8_t request,
+                            uint16_t value,
+                            uint16_t index,
+                            unsigned char *data,
+                            uint16_t length)
+{
+    if(!hndl)
+        open();
+
+    int res = libusb_control_transfer(hndl.get(), 
+            LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR, // type
+            request, // request
+            value, // value
+            index, // index
+            data, //data
+            length, // length
+            1000 //timeout
+            );
+
+    if(res < 0)
+    {
+        std::cerr << "sendVendor: USB Error: " << libusb_error_name(res) << std::endl;
+    }
+}
+
+void USBDevice::receiveVendor(uint8_t request,
+                            uint16_t value,
+                            uint16_t index,
+                            unsigned char *data,
+                            uint16_t length)
+{
+    if(!hndl)
+        open();
+
+    int res = libusb_control_transfer(hndl.get(), 
+            LIBUSB_ENDPOINT_IN | LIBUSB_REQUEST_TYPE_VENDOR, // type
+            request, // request
+            value, // value
+            index, // index
+            data, //data
+            length, // length
+            5000 //timeout
+            );
+
+    if(res < 0)
+    {
+        std::cerr << "receiveVendor: USB Error: " << libusb_error_name(res) << std::endl;
+    }
 }
 
 }
