@@ -100,7 +100,8 @@ void Board::read(unsigned char* data, uint16_t length)
 void Board::write(unsigned char* data, uint16_t length)
 {
     dev.sendVendor(USB_REQ_TAKE_CONTROL, 1, 0, nullptr, 0);
-    static const int step = 24;
+    static const int step = 1;
+    
     for(uint16_t i = 0; i < length; i += step)
     {
         int remaining = length-i;
@@ -113,7 +114,7 @@ void Board::write(unsigned char* data, uint16_t length)
     dev.sendVendor(USB_REQ_TAKE_CONTROL, 0, 0, nullptr, 0);
 }
 
-void setJtagMode(bool enabled)
+void Board::setJtagMode(bool enabled)
 {
     dev.sendVendor(USB_REQ_JTAG, enabled ? 1 : 0, 0, nullptr, 0);
 }

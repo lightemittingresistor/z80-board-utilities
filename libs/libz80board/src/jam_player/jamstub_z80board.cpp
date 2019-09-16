@@ -27,17 +27,31 @@ extern "C"
 #include "jamexprt.h"
 }
 
+#include "../jam_functions.h"
+
 #include <unistd.h>
 #include <iostream>
 
+static JamContext* currentContext = nullptr;
+
+void jam_activate_context(JamContext* ctx)
+{
+    currentContext = ctx;
+}
+
 int jam_getc(void)
 {
+    if(currentContext->jam_ptr < currentContext->jam_length)
+    {
+        return currentContext->jam_buffer[currentContext->jam_ptr++];
+    }
     return -1;
 }
 
 int jam_seek(long offset)
 {
-    return -1;
+    currentContext->jam_ptr = offset;
+    return 0;
 }
 
 int jam_jtag_io(int tms, int tdi, int read_tdo)
