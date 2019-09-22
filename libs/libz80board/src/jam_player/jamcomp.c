@@ -114,7 +114,7 @@ short jam_read_packed(char *buffer, long length, short bits)
 long jam_uncompress
 (
 	char *in, 
-	long in_length, 
+	int in_length, 
 	char *out, 
 	long out_length,
 	int version

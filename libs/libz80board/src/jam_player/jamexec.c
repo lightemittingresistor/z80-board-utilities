@@ -75,7 +75,7 @@ char **jam_init_list = NULL;
 long jam_literal_array_buffer[JAMC_MAX_LITERAL_ARRAYS];
 
 /* buffer for constant literal ACA array data */
-long *jam_literal_aca_buffer[JAMC_MAX_LITERAL_ARRAYS];
+int *jam_literal_aca_buffer[JAMC_MAX_LITERAL_ARRAYS];
 
 /* number of vector signals */
 int jam_vector_signal_count = 0;
@@ -105,7 +105,7 @@ JAM_RETURN_TYPE jam_execute_statement(char *statement_buffer, BOOL *done,
 extern int jam_6bit_char(int ch);
 
 /* prototype for external function in jamsym.c */
-extern BOOL jam_check_init_list(char *name, long *value);
+extern BOOL jam_check_init_list(char *name, int *value);
 
 /****************************************************************************/
 /*																			*/
@@ -202,7 +202,7 @@ JAM_RETURN_TYPE jam_init_statement_buffer
 				}
 				else
 				{
-					/* label name was too long */
+					/* label name was too int */
 					status = JAMC_ILLEGAL_SYMBOL;
 					done = TRUE;
 				}
@@ -446,7 +446,7 @@ JAM_RETURN_TYPE jam_get_statement
 				}
 				else
 				{
-					/* label name was too long */
+					/* label name was too int */
 					status = JAMC_ILLEGAL_SYMBOL;
 					done = TRUE;
 				}
@@ -794,8 +794,8 @@ JAM_RETURN_TYPE jam_get_array_subrange
 (
 	JAMS_SYMBOL_RECORD *symbol_record,
 	char *statement_buffer,
-	long *start_index,
-	long *stop_index
+	int *start_index,
+	int *stop_index
 )
 
 /*																			*/
@@ -915,8 +915,8 @@ JAM_RETURN_TYPE jam_get_array_subrange
 JAM_RETURN_TYPE jam_convert_literal_binary
 (
 	char *statement_buffer,
-	long **output_buffer,
-	long *length,
+	int **output_buffer,
+	int *length,
 	int arg
 )
 
@@ -937,7 +937,7 @@ JAM_RETURN_TYPE jam_convert_literal_binary
 	int j = 0;
 	char ch = 0;
 	int data = 0;
-	long *long_ptr = NULL;
+	int *long_ptr = NULL;
 	JAM_RETURN_TYPE status = JAMC_SUCCESS;
 
 	while ((status == JAMC_SUCCESS) &&
@@ -1028,7 +1028,7 @@ JAM_RETURN_TYPE jam_convert_literal_binary
 
 		if (rev_index > 1)
 		{
-			long_ptr = (long *) (((long) statement_buffer) & 0xfffffffcL);
+			long_ptr = (int *) (((long) statement_buffer) & 0xfffffffcL);
 		}
 		else if (arg < JAMC_MAX_LITERAL_ARRAYS)
 		{
@@ -1064,8 +1064,8 @@ JAM_RETURN_TYPE jam_convert_literal_binary
 JAM_RETURN_TYPE jam_convert_literal_array
 (
 	char *statement_buffer,
-	long **output_buffer,
-	long *length,
+	int **output_buffer,
+	int *length,
 	int arg
 )
 
@@ -1086,7 +1086,7 @@ JAM_RETURN_TYPE jam_convert_literal_array
 	int j = 0;
 	char ch = 0;
 	int data = 0;
-	long *long_ptr = NULL;
+	int *long_ptr = NULL;
 	JAM_RETURN_TYPE status = JAMC_SUCCESS;
 
 	while ((status == JAMC_SUCCESS) &&
@@ -1177,7 +1177,7 @@ JAM_RETURN_TYPE jam_convert_literal_array
 
 		if (rev_index > 1)
 		{
-			long_ptr = (long *) (((long) statement_buffer) & 0xfffffffcL);
+			long_ptr = (int *) (((long) statement_buffer) & 0xfffffffcL);
 		}
 		else if (arg < JAMC_MAX_LITERAL_ARRAYS)
 		{
@@ -1213,8 +1213,8 @@ JAM_RETURN_TYPE jam_convert_literal_array
 JAM_RETURN_TYPE jam_convert_literal_aca
 (
 	char *statement_buffer,
-	long **output_buffer,
-	long *length,
+	int **output_buffer,
+	int *length,
 	int arg
 )
 /*																			*/
@@ -1236,7 +1236,7 @@ JAM_RETURN_TYPE jam_convert_literal_aca
 	long binary_compressed_length = 0L;
 	long uncompressed_length = 0L;
 	char *buffer = NULL;
-	long *long_ptr = NULL;
+	int *long_ptr = NULL;
 	long out_size = 0L;
 	long address = 0L;
 	JAM_RETURN_TYPE status = JAMC_SUCCESS;
@@ -1318,11 +1318,11 @@ JAM_RETURN_TYPE jam_convert_literal_aca
 		if ((uncompressed_length + 4) < 0x10000L)
 		{
 			buffer = jam_malloc((unsigned int) (uncompressed_length + 4));
-			long_ptr = (long *) jam_malloc((unsigned int) (uncompressed_length + 4));
+			long_ptr = (int *) jam_malloc((unsigned int) (uncompressed_length + 4));
 		}
 #else
 		buffer = jam_malloc(uncompressed_length + 4);
-		long_ptr = (long *) jam_malloc(uncompressed_length + 4);
+		long_ptr = (int *) jam_malloc(uncompressed_length + 4);
 #endif
 
 		if ((buffer == NULL) || (long_ptr == NULL))
@@ -1382,9 +1382,9 @@ JAM_RETURN_TYPE jam_get_array_argument
 (
 	char *statement_buffer,
 	JAMS_SYMBOL_RECORD **symbol_record,
-	long **literal_array_data,
-	long *start_index,
-	long *stop_index,
+	int **literal_array_data,
+	int *start_index,
+	int *stop_index,
 	int arg
 )
 
@@ -3260,7 +3260,7 @@ JAM_RETURN_TYPE jam_process_drscan_compare
 (
 	char *statement_buffer,
 	long count_value,
-	long *in_data,
+	int *in_data,
 	long in_index
 )
 
@@ -3289,13 +3289,13 @@ JAM_RETURN_TYPE jam_process_drscan_compare
 	long mask_start_index = 0L;
 	long mask_stop_index = 0L;
 	char save_ch = 0;
-	long *temp_array = NULL;
+	int *temp_array = NULL;
 	BOOL result = TRUE;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
-	long *comp_data = NULL;
-	long *mask_data = NULL;
-	long *literal_array_data = NULL;
+	int *comp_data = NULL;
+	int *mask_data = NULL;
+	int *literal_array_data = NULL;
 	JAM_RETURN_TYPE status = JAMC_SYNTAX_ERROR;
 
 	/*
@@ -3524,7 +3524,7 @@ JAM_RETURN_TYPE jam_process_drscan_capture
 (
 	char *statement_buffer,
 	long count_value,
-	long *in_data,
+	int *in_data,
 	long in_index
 )
 
@@ -3545,8 +3545,8 @@ JAM_RETURN_TYPE jam_process_drscan_capture
 	long start_index = 0L;
 	long stop_index = 0L;
 	char save_ch = 0;
-	long *tdi_data = NULL;
-	long *literal_array_data = NULL;
+	int *tdi_data = NULL;
+	int *literal_array_data = NULL;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
 	JAM_RETURN_TYPE status = JAMC_SYNTAX_ERROR;
@@ -3648,8 +3648,8 @@ JAM_RETURN_TYPE jam_process_drscan
 	long start_index = 0L;
 	long stop_index = 0L;
 	char save_ch = 0;
-	long *tdi_data = NULL;
-	long *literal_array_data = NULL;
+	int *tdi_data = NULL;
+	int *literal_array_data = NULL;
 	JAME_EXPRESSION_TYPE expr_type = JAM_ILLEGAL_EXPR_TYPE;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
@@ -4777,7 +4777,7 @@ JAM_RETURN_TYPE jam_process_irscan_compare
 (
 	char *statement_buffer,
 	long count_value,
-	long *in_data,
+	int *in_data,
 	long in_index
 )
 
@@ -4806,13 +4806,13 @@ JAM_RETURN_TYPE jam_process_irscan_compare
 	long mask_start_index = 0L;
 	long mask_stop_index = 0L;
 	char save_ch = 0;
-	long *temp_array = NULL;
+	int *temp_array = NULL;
 	BOOL result = TRUE;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
-	long *comp_data = NULL;
-	long *mask_data = NULL;
-	long *literal_array_data = NULL;
+	int *comp_data = NULL;
+	int *mask_data = NULL;
+	int *literal_array_data = NULL;
 	JAM_RETURN_TYPE status = JAMC_SYNTAX_ERROR;
 
 	/*
@@ -5041,7 +5041,7 @@ JAM_RETURN_TYPE jam_process_irscan_capture
 (
 	char *statement_buffer,
 	long count_value,
-	long *in_data,
+	int *in_data,
 	long in_index
 )
 
@@ -5062,8 +5062,8 @@ JAM_RETURN_TYPE jam_process_irscan_capture
 	long start_index = 0L;
 	long stop_index = 0L;
 	char save_ch = 0;
-	long *tdi_data = NULL;
-	long *literal_array_data = NULL;
+	int *tdi_data = NULL;
+	int *literal_array_data = NULL;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
 	JAM_RETURN_TYPE status = JAMC_SYNTAX_ERROR;
@@ -5165,8 +5165,8 @@ JAM_RETURN_TYPE jam_process_irscan
 	long start_index = 0L;
 	long stop_index = 0L;
 	char save_ch = 0;
-	long *tdi_data = NULL;
-	long *literal_array_data = NULL;
+	int *tdi_data = NULL;
+	int *literal_array_data = NULL;
 	JAME_EXPRESSION_TYPE expr_type = JAM_ILLEGAL_EXPR_TYPE;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
@@ -5394,10 +5394,10 @@ JAM_RETURN_TYPE jam_process_irstop
 
 JAM_RETURN_TYPE jam_copy_array_subrange
 (
-	long *source_heap_data,
+	int *source_heap_data,
 	long source_subrange_begin,
 	long source_subrange_end,
-	long *dest_heap_data,
+	int *dest_heap_data,
 	long dest_subrange_begin,
 	long dest_subrange_end
 )
@@ -5530,9 +5530,9 @@ JAM_RETURN_TYPE jam_process_assignment
 	BOOL is_array = FALSE;
 	BOOL full_array = FALSE;
 	BOOL array_subrange = FALSE;
-	long *source_heap_data = NULL;
-	long *dest_heap_data = NULL;
-	long *literal_array_data = NULL;
+	int *source_heap_data = NULL;
+	int *dest_heap_data = NULL;
+	int *literal_array_data = NULL;
 	JAME_EXPRESSION_TYPE assign_type = JAM_ILLEGAL_EXPR_TYPE;
 	JAME_EXPRESSION_TYPE expr_type = JAM_ILLEGAL_EXPR_TYPE;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
@@ -6229,7 +6229,7 @@ JAM_RETURN_TYPE jam_process_pop
 	int bracket_count = 0;
 	char save_ch = 0;
 	BOOL is_array = FALSE;
-	long *heap_data = NULL;
+	int *heap_data = NULL;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_STACK_RECORD *stack_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
@@ -6517,8 +6517,8 @@ JAM_RETURN_TYPE jam_process_pre_post
 	long count = 0L;
 	long start_index = 0L;
 	long stop_index = 0L;
-	long *literal_array_data = NULL;
-	long *padding_data = NULL;
+	int *literal_array_data = NULL;
+	int *padding_data = NULL;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
 	JAME_EXPRESSION_TYPE expr_type = JAM_ILLEGAL_EXPR_TYPE;
@@ -7400,8 +7400,8 @@ JAM_RETURN_TYPE jam_process_vector_capture
 (
 	char *statement_buffer,
 	int signal_count,
-	long *dir_vector,
-	long *data_vector
+	int *dir_vector,
+	int *data_vector
 )
 
 /*																			*/
@@ -7421,8 +7421,8 @@ JAM_RETURN_TYPE jam_process_vector_capture
 	long start_index = 0L;
 	long stop_index = 0L;
 	char save_ch = 0;
-	long *capture_buffer = NULL;
-	long *literal_array_data = NULL;
+	int *capture_buffer = NULL;
+	int *literal_array_data = NULL;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
 	JAM_RETURN_TYPE status = JAMC_SYNTAX_ERROR;
@@ -7507,8 +7507,8 @@ JAM_RETURN_TYPE jam_process_vector_compare
 (
 	char *statement_buffer,
 	int signal_count,
-	long *dir_vector,
-	long *data_vector
+	int *dir_vector,
+	int *data_vector
 )
 
 /*																			*/
@@ -7536,13 +7536,13 @@ JAM_RETURN_TYPE jam_process_vector_compare
 	long mask_start_index = 0L;
 	long mask_stop_index = 0L;
 	char save_ch = 0;
-	long *temp_array = NULL;
+	int *temp_array = NULL;
 	BOOL result = TRUE;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
-	long *comp_data = NULL;
-	long *mask_data = NULL;
-	long *literal_array_data = NULL;
+	int *comp_data = NULL;
+	int *mask_data = NULL;
+	int *literal_array_data = NULL;
 	JAM_RETURN_TYPE status = JAMC_SYNTAX_ERROR;
 
 	/*
@@ -7797,9 +7797,9 @@ JAM_RETURN_TYPE jam_process_vector
 	long data_start_index = 0L;
 	long data_stop_index = 0L;
 	char save_ch = 0;
-	long *dir_vector = NULL;
-	long *data_vector = NULL;
-	long *literal_array_data = NULL;
+	int *dir_vector = NULL;
+	int *data_vector = NULL;
+	int *literal_array_data = NULL;
 	JAMS_SYMBOL_RECORD *symbol_record = NULL;
 	JAMS_HEAP_RECORD *heap_record = NULL;
 	JAM_RETURN_TYPE status = JAMC_SYNTAX_ERROR;
@@ -8603,7 +8603,7 @@ JAM_RETURN_TYPE jam_execute
 	char *action,
 	char **init_list,
 	int reset_jtag,
-	long *error_line,
+	int *error_line,
 	int *exit_code,
 	int *format_version
 )

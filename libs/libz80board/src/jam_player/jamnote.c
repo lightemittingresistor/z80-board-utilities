@@ -19,8 +19,8 @@
 BOOL jam_get_note_key
 (
 	char *statement_buffer,
-	long *key_begin,
-	long *key_end
+	int *key_begin,
+	int *key_end
 )
 
 /*																			*/
@@ -94,8 +94,8 @@ BOOL jam_get_note_key
 BOOL jam_get_note_value
 (
 	char *statement_buffer,
-	long *value_begin,
-	long *value_end
+	int *value_begin,
+	int *value_end
 )
 
 /*																			*/
@@ -201,7 +201,7 @@ JAM_RETURN_TYPE jam_get_note
 (
 	char *program,
 	long program_size,
-	long *offset,
+	int *offset,
 	char *key,
 	char *value,
 	int length

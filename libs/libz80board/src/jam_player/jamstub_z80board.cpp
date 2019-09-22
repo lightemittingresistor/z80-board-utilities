@@ -28,6 +28,7 @@ extern "C"
 }
 
 #include "../jam_functions.h"
+#include "../board.h"
 
 #include <unistd.h>
 #include <iostream>
@@ -50,13 +51,30 @@ int jam_getc(void)
 
 int jam_seek(long offset)
 {
-    currentContext->jam_ptr = offset;
+    if(offset >= 0 && offset < currentContext->jam_length)
+    {
+        currentContext->jam_ptr = offset;
+    }
+    else
+    {
+        return -1;
+    }
+
     return 0;
 }
 
 int jam_jtag_io(int tms, int tdi, int read_tdo)
 {
-    return 0;// return tdo
+    //std::cout << "jam_jtag_io(tms=" << tms << ", tdi=" << tdi << ", read_tdo=" << read_tdo << ")" << std::endl;
+
+    int tdo = currentContext->board->jam_jtag_io(tms, tdi, read_tdo) ? 1 : 0;
+
+    if(read_tdo)
+    {
+        //std::cout << "TDO is " << tdo << std::endl;
+    }
+
+    return tdo;// return tdo
 }
 
 void jam_message(char *message_text)
@@ -87,9 +105,9 @@ void jam_free(void *ptr)
 int jam_vector_io
 (
     int signal_count,
-    long *dir_vect,
-    long *data_vect,
-    long *capture_vect
+    int *dir_vect,
+    int *data_vect,
+    int *capture_vect
 )
 {
     std::cout << "unimplemented vector io call" << std::endl;

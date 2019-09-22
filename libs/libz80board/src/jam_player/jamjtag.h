@@ -77,28 +77,28 @@ JAM_RETURN_TYPE jam_set_dr_preamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 );
 
 JAM_RETURN_TYPE jam_set_ir_preamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 );
 
 JAM_RETURN_TYPE jam_set_dr_postamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 );
 
 JAM_RETURN_TYPE jam_set_ir_postamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 );
 
 JAM_RETURN_TYPE jam_goto_jtag_state
@@ -121,32 +121,32 @@ JAM_RETURN_TYPE jam_do_wait_microseconds
 JAM_RETURN_TYPE jam_do_irscan
 (
 	long count,
-	long *data,
+	int *data,
 	long start_index
 );
 
 JAM_RETURN_TYPE jam_swap_ir
 (
 	long count,
-	long *in_data,
+	int *in_data,
 	long in_index,
-	long *out_data,
+	int *out_data,
 	long out_index
 );
 
 JAM_RETURN_TYPE jam_do_drscan
 (
 	long count,
-	long *data,
+	int *data,
 	long start_index
 );
 
 JAM_RETURN_TYPE jam_swap_dr
 (
 	long count,
-	long *in_data,
+	int *in_data,
 	long in_index,
-	long *out_data,
+	int *out_data,
 	long out_index
 );
 

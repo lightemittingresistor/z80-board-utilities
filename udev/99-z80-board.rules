@@ -1,0 +1,1 @@
+SUBSYSTEM=="usb", ATTR{idVendor}=="16c0", ATTR{idProduct}=="05df", ATTR{product}=="z80 board", ATTR{manufacturer}=="lightemittingresistor.com", MODE="0660", GROUP="plugdev"

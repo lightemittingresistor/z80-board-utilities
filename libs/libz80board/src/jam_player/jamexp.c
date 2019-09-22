@@ -339,7 +339,7 @@ long jam_square_root(long num)
 *	index of the least significant bit.  Typically msb > lsb, otherwise the
 *	bit order will be reversed when converted into integer format.
 */
-long jam_convert_bool_to_int(long *data, long msb, long lsb)
+long jam_convert_bool_to_int(int *data, long msb, long lsb)
 {
 	long i, increment = (msb > lsb) ? 1 : -1;
 	long mask = 1L, result = 0L;
@@ -1108,7 +1108,7 @@ long jam_atol_hex(char *string)
 /************************************************************************/
 /*																   		*/
 
-BOOL jam_constant_value(char *string, long *value)
+BOOL jam_constant_value(char *string, int *value)
 
 /*                                                                      */
 /*		This routine converts a string constant into its binary			*/
@@ -1295,7 +1295,7 @@ int jam_yylex()
 JAM_RETURN_TYPE jam_evaluate_expression
 (
 	char *expression,
-	long *result,
+	int *result,
 	JAME_EXPRESSION_TYPE *result_type
 )
 

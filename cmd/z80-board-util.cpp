@@ -37,6 +37,7 @@ int main(int argc, char** argv)
     bool dump = false;
     bool write = false;
     bool peek = false;
+    bool jtag = false;
     int boardNum = 1;
     int peekAddress = 0;
     char filename[1024] = "dump.bin";
@@ -78,6 +79,10 @@ int main(int argc, char** argv)
         {
             write = true;
         }
+        else if(std::string(argv[i]) == "--jtag")
+        {
+            jtag = true;
+        }
         else if(std::string(argv[i]) == "--file")
         {
             if((i+1) == argc)
@@ -108,7 +113,7 @@ int main(int argc, char** argv)
         }
     }
 
-    if(!help && !count && !status && !reset && !dump && !write && !peek)
+    if(!help && !count && !status && !reset && !dump && !write && !peek && !jtag)
     {
         help = true;
     }
@@ -123,6 +128,7 @@ int main(int argc, char** argv)
                     << " --reset\t\treset the z80" << std::endl
                     << " --dump\t\tdump the eeprom to a file" << std::endl
                     << " --write\t\tload the eeprom from a file" << std::endl
+                    << " --jtag\t\tload a jam file into the CPLD" << std::endl
                     << " --file <filename>\t\tsets the filename for dump and load (defaults to dump.bin)" << std::endl
                     << " --peek <address>\t\tread a single hex address" << std::endl;
 
@@ -151,7 +157,7 @@ int main(int argc, char** argv)
     else
     {
         // open the board
-        z80_board_error_t err;
+        z80_board_error_t err = nullptr;
         z80_board_t board = z80_board_open(lst, boardNum, &err);
         if(!board)
         {
@@ -195,6 +201,15 @@ int main(int argc, char** argv)
             std::cout << "Writing " << count << " bytes to device" << std::endl;
             z80_board_write(board, buffer, count);
             fclose(loadf);
+        }
+
+        if(jtag)
+        {
+            z80_board_jtag(board, filename, &err);
+            if(err)
+            {
+                std::cout << "Aww crap" << std::endl;
+            }
         }
 
         if(peek)

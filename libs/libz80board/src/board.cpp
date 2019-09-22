@@ -34,6 +34,7 @@ static const uint8_t USB_REQ_POINTER = 3;
 static const uint8_t USB_REQ_TRANSFER_DATA = 4;
 static const uint8_t USB_REQ_RESET = 5;
 static const uint8_t USB_REQ_JTAG = 6;
+static const uint8_t USB_REQ_JTAG_IO = 7;
 
 Board::Board(USBDevice dev) :
     dev(std::move(dev))
@@ -117,6 +118,20 @@ void Board::write(unsigned char* data, uint16_t length)
 void Board::setJtagMode(bool enabled)
 {
     dev.sendVendor(USB_REQ_JTAG, enabled ? 1 : 0, 0, nullptr, 0);
+}
+
+bool Board::jam_jtag_io(bool tms, bool tdi, bool read_tdo)
+{
+    unsigned char data;
+
+    dev.receiveVendor(USB_REQ_JTAG_IO, (tms ? 1 : 0) | (tdi ? 2 : 0), 0, &data, 1);
+
+    if(read_tdo)
+    {
+        return data == 1;
+    }
+
+    return false;
 }
 
 }

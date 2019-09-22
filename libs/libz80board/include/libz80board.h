@@ -28,5 +28,6 @@
 #include "libz80board/base.h"
 #include "libz80board/comms.h"
 #include "libz80board/error.h"
+#include "libz80board/jtag.h"
 
 #endif

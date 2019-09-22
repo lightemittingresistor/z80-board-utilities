@@ -25,7 +25,7 @@
 if(NOT UNIX OR APPLE) 
 include(libusb.cmake)
 else()
-# TODO LINUX
+find_package(LibUSB REQUIRED)
 endif()
 
 set(JAM_PLAYER_SOURCES
@@ -48,9 +48,11 @@ set(Z80BOARD_SOURCES
     include/libz80board/base.h
     include/libz80board/comms.h
     include/libz80board/error.h
+    include/libz80board/jtag.h
     src/comms.cpp
     src/error.cpp src/error_internal.h
     src/board.cpp src/board.h
+    src/jtag.cpp
 
     src/libusb-wrapper/libusbcontext.cpp src/libusb-wrapper/libusbcontext.h
     src/libusb-wrapper/usbdevice.cpp src/libusb-wrapper/usbdevice.h
@@ -69,10 +71,13 @@ add_definitions(-DBUILD_LIB_Z80BOARD)
 
 add_library(z80board SHARED ${JAM_PLAYER_SOURCES}
                 ${Z80BOARD_SOURCES} ${Z80BOARD_PLATFORM_SOURCES})
-target_link_libraries(z80board ${Z80BOARD_LIBS} ${LibUSB_LIBRARIES})
+target_link_libraries(z80board ${Z80BOARD_LIBS} ${LIBUSB_LIBRARIES})
 target_include_directories(z80board PUBLIC include)
 target_include_directories(z80board PRIVATE ${LibUSB_INCLUDE_DIRS})
-add_dependencies(z80board libusb)
+
+if(NOT UNIX OR APPLE) 
+    add_dependencies(z80board libusb)
+endif()
 
 source_group("common" FILES ${Z80BOARD_SOURCES})
 source_group("platform" FILES ${Z80BOARD_PLATFORM_SOURCES})

@@ -43,10 +43,10 @@ int jam_ir_preamble  = 0;
 int jam_ir_postamble = 0;
 int jam_dr_length    = 0;
 int jam_ir_length    = 0;
-long *jam_dr_preamble_data  = NULL;
-long *jam_dr_postamble_data = NULL;
-long *jam_ir_preamble_data  = NULL;
-long *jam_ir_postamble_data = NULL;
+int *jam_dr_preamble_data  = NULL;
+int *jam_dr_postamble_data = NULL;
+int *jam_ir_preamble_data  = NULL;
+int *jam_ir_postamble_data = NULL;
 char *jam_dr_buffer         = NULL;
 char *jam_ir_buffer         = NULL;
 
@@ -162,7 +162,7 @@ JAM_RETURN_TYPE jam_init_jtag(void)
 	{
 		symbol_table = (void **) jam_workspace;
 		stack = (JAMS_STACK_RECORD *) &symbol_table[JAMC_MAX_SYMBOL_COUNT];
-		jam_dr_preamble_data = (long *) &stack[JAMC_MAX_NESTING_DEPTH];
+		jam_dr_preamble_data = (int *) &stack[JAMC_MAX_NESTING_DEPTH];
 		jam_dr_postamble_data = &jam_dr_preamble_data[JAMC_MAX_JTAG_DR_PREAMBLE / 32];
 		jam_ir_preamble_data = &jam_dr_postamble_data[JAMC_MAX_JTAG_DR_POSTAMBLE / 32];
 		jam_ir_postamble_data = &jam_ir_preamble_data[JAMC_MAX_JTAG_IR_PREAMBLE / 32];
@@ -221,7 +221,7 @@ JAM_RETURN_TYPE jam_set_dr_preamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 )
 
 /*																			*/
@@ -251,8 +251,8 @@ JAM_RETURN_TYPE jam_set_dr_preamble
 			{
 				alloc_longs = (count + 31) >> 5;
 				jam_free(jam_dr_preamble_data);
-				jam_dr_preamble_data = (long *) jam_malloc(
-					alloc_longs * sizeof(long));
+				jam_dr_preamble_data = (int *) jam_malloc(
+					alloc_longs * sizeof(int));
 
 				if (jam_dr_preamble_data == NULL)
 				{
@@ -305,7 +305,7 @@ JAM_RETURN_TYPE jam_set_ir_preamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 )
 
 /*																			*/
@@ -335,8 +335,8 @@ JAM_RETURN_TYPE jam_set_ir_preamble
 			{
 				alloc_longs = (count + 31) >> 5;
 				jam_free(jam_ir_preamble_data);
-				jam_ir_preamble_data = (long *) jam_malloc(
-					alloc_longs * sizeof(long));
+				jam_ir_preamble_data = (int *) jam_malloc(
+					alloc_longs * sizeof(int));
 
 				if (jam_ir_preamble_data == NULL)
 				{
@@ -389,7 +389,7 @@ JAM_RETURN_TYPE jam_set_dr_postamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 )
 
 /*																			*/
@@ -419,8 +419,8 @@ JAM_RETURN_TYPE jam_set_dr_postamble
 			{
 				alloc_longs = (count + 31) >> 5;
 				jam_free(jam_dr_postamble_data);
-				jam_dr_postamble_data = (long *) jam_malloc(
-					alloc_longs * sizeof(long));
+				jam_dr_postamble_data = (int *) jam_malloc(
+					alloc_longs * sizeof(int));
 
 				if (jam_dr_postamble_data == NULL)
 				{
@@ -473,7 +473,7 @@ JAM_RETURN_TYPE jam_set_ir_postamble
 (
 	int count,
 	int start_index,
-	long *data
+	int *data
 )
 
 /*																			*/
@@ -503,8 +503,8 @@ JAM_RETURN_TYPE jam_set_ir_postamble
 			{
 				alloc_longs = (count + 31) >> 5;
 				jam_free(jam_ir_postamble_data);
-				jam_ir_postamble_data = (long *) jam_malloc(
-					alloc_longs * sizeof(long));
+				jam_ir_postamble_data = (int *) jam_malloc(
+					alloc_longs * sizeof(int));
 
 				if (jam_ir_postamble_data == NULL)
 				{
@@ -775,12 +775,12 @@ JAM_RETURN_TYPE jam_do_wait_microseconds
 void jam_jtag_concatenate_data
 (
 	char *buffer,
-	long *preamble_data,
+	int *preamble_data,
 	long preamble_count,
-	long *target_data,
+	int *target_data,
 	long start_index,
 	long target_count,
-	long *postamble_data,
+	int *postamble_data,
 	long postamble_count
 )
 
@@ -844,7 +844,7 @@ void jam_jtag_concatenate_data
 void jam_jtag_extract_target_data
 (
 	char *buffer,
-	long *target_data,
+	int *target_data,
 	long start_index,
 	long preamble_count,
 	long target_count
@@ -859,9 +859,9 @@ void jam_jtag_extract_target_data
 /*																			*/
 /****************************************************************************/
 {
-	long i = 0L;
-	long j = 0L;
-	long k = 0L;
+	int i = 0L;
+	int j = 0L;
+	int k = 0L;
 
 	j = preamble_count;
 	k = start_index + target_count;
@@ -873,7 +873,7 @@ void jam_jtag_extract_target_data
 		}
 		else
 		{
-			target_data[i >> 5] &= ~(unsigned long) (1L << (i & 0x1f));
+			target_data[i >> 5] &= ~(unsigned int) (1L << (i & 0x1f));
 		}
 	}
 }
@@ -1027,7 +1027,7 @@ int jam_jtag_irscan
 JAM_RETURN_TYPE jam_do_irscan
 (
 	long count,
-	long *data,
+	int *data,
 	long start_index
 )
 
@@ -1163,9 +1163,9 @@ JAM_RETURN_TYPE jam_do_irscan
 JAM_RETURN_TYPE jam_swap_ir
 (
 	long count,
-	long *in_data,
+	int *in_data,
 	long in_index,
-	long *out_data,
+	int *out_data,
 	long out_index
 )
 
@@ -1317,7 +1317,7 @@ JAM_RETURN_TYPE jam_swap_ir
 JAM_RETURN_TYPE jam_do_drscan
 (
 	long count,
-	long *data,
+	int *data,
 	long start_index
 )
 
@@ -1453,9 +1453,9 @@ JAM_RETURN_TYPE jam_do_drscan
 JAM_RETURN_TYPE jam_swap_dr
 (
 	long count,
-	long *in_data,
+	int *in_data,
 	long in_index,
-	long *out_data,
+	int *out_data,
 	long out_index
 )
 

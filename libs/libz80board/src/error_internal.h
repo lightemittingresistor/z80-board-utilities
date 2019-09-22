@@ -45,4 +45,12 @@ Error* getErrorFromExternal(z80_board_error_t e);
 
 }
 
+inline void maybeError(z80_board_error_t* error_out, std::string text)
+{
+    if(error_out)
+    {
+        *error_out = z80board::createExternalError(std::move(text));
+    }
+}
+
 #endif

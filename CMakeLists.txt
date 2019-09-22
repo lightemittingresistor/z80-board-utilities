@@ -25,6 +25,9 @@
 cmake_minimum_required(VERSION 3.1)
 project(z80-board-utilities)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+
 # Make sure we don't end up with any of that weird MBCS stuff
 # Admittedly this means we end up with weird UTF-16 stuff :-)
 if(WIN32)

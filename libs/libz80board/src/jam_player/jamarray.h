@@ -33,7 +33,7 @@ JAM_RETURN_TYPE jam_get_array_value
 (
 	JAMS_SYMBOL_RECORD *symbol_record,
 	long index,
-	long *value
+	int *value
 );
 
 #endif	/* INC_JAMARRAY_H */

@@ -90,7 +90,7 @@ JAM_RETURN_TYPE jam_get_symbol_value
 (
 	JAME_SYMBOL_TYPE type,
 	char *name,
-	long *value
+	int *value
 );
 
 JAM_RETURN_TYPE jam_set_symbol_value

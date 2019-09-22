@@ -11,6 +11,6 @@ ExternalProject_Add(libusb
     BUILD_IN_SOURCE 1
 )
 
-SET(LibUSB_LIBRARIES 
+SET(LIBUSB_LIBRARIES 
     ${CMAKE_CURRENT_BINARY_DIR}/libusb-install/lib/libusb-1.0${CMAKE_SHARED_LIBRARY_SUFFIX})
 SET(LibUSB_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/libusb-install/include/)

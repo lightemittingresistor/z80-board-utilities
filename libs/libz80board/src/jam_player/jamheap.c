@@ -49,7 +49,7 @@ JAM_RETURN_TYPE jam_init_heap(void)
 	JAM_RETURN_TYPE status = JAMC_SUCCESS;
 	void **symbol_table = NULL;
 	JAMS_STACK_RECORD *stack = NULL;
-	long *jtag_buffer = NULL;
+	int *jtag_buffer = NULL;
 
 	jam_heap_records = 0L;
 
@@ -57,7 +57,7 @@ JAM_RETURN_TYPE jam_init_heap(void)
 	{
 		symbol_table = (void **) jam_workspace;
 		stack = (JAMS_STACK_RECORD *) &symbol_table[JAMC_MAX_SYMBOL_COUNT];
-		jtag_buffer = (long *) &stack[JAMC_MAX_NESTING_DEPTH];
+		jtag_buffer = (int *) &stack[JAMC_MAX_NESTING_DEPTH];
 		jam_heap = (JAMS_HEAP_RECORD *)
 			(((char *) jtag_buffer) + JAMC_JTAG_BUFFER_SIZE);
 		jam_heap_top = (void *) jam_heap;

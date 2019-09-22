@@ -47,6 +47,7 @@ public:
     void write(unsigned char* data, uint16_t length);
 
     void setJtagMode(bool enabled);
+    bool jam_jtag_io(bool tms, bool tdi, bool read_tdo);
 
 private:
     USBDevice dev;

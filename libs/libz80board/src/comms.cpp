@@ -39,14 +39,6 @@ static const char* manufacturerName = "lightemittingresistor.com";
 static const char* productName = "z80 board";
 }
 
-void maybeError(z80_board_error_t* error_out, std::string text)
-{
-    if(error_out)
-    {
-        *error_out = z80board::createExternalError(std::move(text));
-    }
-}
-
 z80_board_t z80_board_open(z80_board_list_t list, int id, z80_board_error_t* error_out)
 {
     z80board::BoardList* real = static_cast<z80board::BoardList*>(list);

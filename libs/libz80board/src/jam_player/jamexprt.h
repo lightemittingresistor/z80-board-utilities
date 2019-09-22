@@ -63,7 +63,7 @@ JAM_RETURN_TYPE jam_execute
 	char *action,
 	char **init_list,
 	int reset_jtag,
-	long *error_line,
+	int *error_line,
 	int *exit_code,
 	int *format_version
 );
@@ -72,7 +72,7 @@ JAM_RETURN_TYPE jam_get_note
 (
 	char *program,
 	long program_size,
-	long *offset,
+	int *offset,
 	char *key,
 	char *value,
 	int length
@@ -135,9 +135,9 @@ int jam_vector_map
 int jam_vector_io
 (
 	int signal_count,
-	long *dir_vect,
-	long *data_vect,
-	long *capture_vect
+	int *dir_vect,
+	int *data_vect,
+	int *capture_vect
 );
 
 int jam_set_frequency

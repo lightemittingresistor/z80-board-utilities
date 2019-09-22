@@ -22,27 +22,21 @@
  * SOFTWARE.
  */
 
-#ifndef Z80_BOARD_JAM_FUNCS_H
-#define Z80_BOARD_JAM_FUNCS_H
+#ifndef Z80_BOARD_JTAG_H
+#define Z80_BOARD_JTAG_H
 
-#include <cstddef>
+#include "base.h"
+#include "error.h"
+#include "comms.h"
 
-namespace z80board
-{
-class Board;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+LIBZ80BOARD_EXPORT void z80_board_jtag(z80_board_t board, const char* jamfile, z80_board_error_t* error_out);
+
+#ifdef __cplusplus
 }
-
-struct JamContext
-{
-    size_t jam_ptr;
-    size_t jam_length;
-    char* jam_buffer;
-    z80board::Board* board;
-
-    JamContext() : jam_ptr(0), jam_length(0), jam_buffer(nullptr), board(nullptr) {}
-};
-
-void jam_activate_context(JamContext* ctx);
-inline void jam_deactivate_context() { jam_activate_context(nullptr); }
+#endif
 
 #endif
